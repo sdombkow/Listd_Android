@@ -79,13 +79,13 @@ public class HomeActivity extends Activity {
 		protected void onPostExecute(JSONObject json) {
 			try {
 				JSONArray jsonTasks = json.getJSONObject("data").getJSONArray(
-						"tasks");
+						"bars");
 				int length = jsonTasks.length();
 				List<String> tasksTitles = new ArrayList<String>(length);
 
 				for (int i = 0; i < length; i++) {
 					tasksTitles.add(jsonTasks.getJSONObject(i).getString(
-							"title"));
+							"name"));
 				}
 
 				ListView tasksListView = (ListView) findViewById(R.id.tasks_list_view);
