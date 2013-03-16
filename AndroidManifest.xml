@@ -18,7 +18,7 @@
             android:label="@string/title_activity_home" >
         </activity>
         <activity
-            android:name=".WelcomeActivity"
+            android:name="com.listdnow.www.authentication.WelcomeActivity"
             android:label="@string/title_activity_welcome"
             android:noHistory="true" >
             <intent-filter>
@@ -28,12 +28,17 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".LoginActivity"
+            android:name="com.listdnow.www.authentication.LoginActivity"
             android:label="@string/title_activity_login"
             android:noHistory="true" >
         </activity>
         <activity
-            android:name=".RegisterActivity"
+            android:name="com.listdnow.www.BarActivity"
+            android:label="@string/title_activity_bar"
+            android:noHistory="true" >
+        </activity>
+        <activity
+            android:name="com.listdnow.www.authentication.RegisterActivity"
             android:label="@string/title_activity_register"
             android:noHistory="true" >
         </activity>

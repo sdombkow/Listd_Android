@@ -17,6 +17,8 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.listdnow.www.authentication.WelcomeActivity;
+import com.listdnow.www.util.JSONObjectClickedListener;
 import com.savagelook.android.UrlJsonAsyncTask;
 
 public class HomeActivity extends Activity {
@@ -78,21 +80,24 @@ public class HomeActivity extends Activity {
 		@Override
 		protected void onPostExecute(JSONObject json) {
 			try {
-				JSONArray jsonTasks = json.getJSONObject("data").getJSONArray(
+				JSONArray jsonBars = json.getJSONObject("data").getJSONArray(
 						"bars");
-				int length = jsonTasks.length();
-				List<String> tasksTitles = new ArrayList<String>(length);
+				Bundle b = new Bundle();
+				b.putString("bars", jsonBars.toString());
+				int length = jsonBars.length();
+				List<String> barTitles = new ArrayList<String>(length);
 
 				for (int i = 0; i < length; i++) {
-					tasksTitles.add(jsonTasks.getJSONObject(i).getString(
+					barTitles.add(jsonBars.getJSONObject(i).getString(
 							"name"));
 				}
 
-				ListView tasksListView = (ListView) findViewById(R.id.tasks_list_view);
-				if (tasksListView != null) {
-					tasksListView.setAdapter(new ArrayAdapter<String>(
+				ListView barListView = (ListView) findViewById(R.id.tasks_list_view);
+				if (barListView != null) {
+					barListView.setAdapter(new ArrayAdapter<String>(
 							HomeActivity.this,
-							android.R.layout.simple_list_item_1, tasksTitles));
+							android.R.layout.simple_list_item_1, barTitles));
+					barListView.setOnItemClickListener(new JSONObjectClickedListener(jsonBars,HomeActivity.this,BarActivity.class));
 				}
 			} catch (Exception e) {
 				Toast.makeText(context, e.getMessage(), Toast.LENGTH_LONG)
