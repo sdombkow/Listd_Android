@@ -22,11 +22,10 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.listdnow.www.AdminActivity;
 import com.listdnow.www.HomeActivity;
+import com.listdnow.www.PartnerActivity;
 import com.listdnow.www.R;
-import com.listdnow.www.R.id;
-import com.listdnow.www.R.layout;
-import com.listdnow.www.R.menu;
 import com.savagelook.android.UrlJsonAsyncTask;
 
 public class LoginActivity extends Activity {
@@ -133,10 +132,18 @@ public class LoginActivity extends Activity {
 							.getString("auth_token"));
 					editor.commit();
 
-					// launch the HomeActivity and close this one
-					Intent intent = new Intent(getApplicationContext(),
-							HomeActivity.class);
-					startActivity(intent);
+					Intent intent;
+					if (json.getBoolean("admin")) {
+						intent = new Intent(getApplicationContext(),
+								AdminActivity.class);
+					} else if (json.getBoolean("partner")) {
+						intent = new Intent(getApplicationContext(),
+								PartnerActivity.class);
+					} else {
+						intent = new Intent(getApplicationContext(),
+								HomeActivity.class);
+					}
+					startActivityForResult(intent, 0);
 					finish();
 				}
 				Toast.makeText(context, json.getString("info"),

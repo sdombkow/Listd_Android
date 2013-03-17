@@ -13,7 +13,9 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -24,7 +26,7 @@ import com.savagelook.android.UrlJsonAsyncTask;
 public class HomeActivity extends Activity {
 
 	private static final String TASKS_URL = "http://10.0.2.2:3000/api/v1/tasks.json";
-
+	private String mSearchQuery;
 	private SharedPreferences mPreferences;
 
 	@Override
@@ -53,6 +55,17 @@ public class HomeActivity extends Activity {
 		return true;
 	}
 
+	public void search(View button) {
+		EditText searchField = (EditText) findViewById(R.id.search_edittext);
+		mSearchQuery = searchField.getText().toString();
+		
+		Intent intent = new Intent(getApplicationContext(),
+				SearchActivity.class);
+		intent.putExtra("search_query",mSearchQuery);
+		startActivity(intent);
+	}
+	
+	
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		// Handle item selection
