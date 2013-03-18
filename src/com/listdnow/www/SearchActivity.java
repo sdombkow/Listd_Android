@@ -1,6 +1,8 @@
-package com.listdnow.www.authentication;
+package com.listdnow.www;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.http.client.HttpResponseException;
 import org.apache.http.client.ResponseHandler;
@@ -8,6 +10,7 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.BasicResponseHandler;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -19,56 +22,71 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.Toast;
 
-import com.listdnow.www.AdminActivity;
-import com.listdnow.www.HomeActivity;
-import com.listdnow.www.PartnerActivity;
-import com.listdnow.www.R;
+import com.listdnow.www.authentication.WelcomeActivity;
+import com.listdnow.www.util.JSONObjectClickedListener;
 import com.savagelook.android.UrlJsonAsyncTask;
 
-public class LoginActivity extends Activity {
+public class SearchActivity extends Activity {
 
-	private final static String LOGIN_API_ENDPOINT_URL = "http://10.0.2.2:3000/api/v1/sessions.json";
+	private static final String SEARCH_URL = "http://10.0.2.2:3000/api/v1/search.json";
 	private SharedPreferences mPreferences;
-	private String mUserEmail;
-	private String mUserPassword;
+	private String mSearchQuery;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_login);
+		setContentView(R.layout.activity_search);
+
+		Intent intent = this.getIntent();
+		mSearchQuery = intent.getStringExtra("search_query");
+		if (mSearchQuery == null) {
+			mSearchQuery = ""; // search for nearest in the future
+		}
 
 		mPreferences = getSharedPreferences("CurrentUser", MODE_PRIVATE);
+
+	}
+
+	@Override
+	public void onResume() {
+		super.onResume();
+
+		if (mPreferences.contains("AuthToken")) {
+			searchBarsFromAPI(SEARCH_URL);
+		} else {
+			Intent intent = new Intent(SearchActivity.this,
+					WelcomeActivity.class);
+			startActivityForResult(intent, 0);
+		}
 	}
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		getMenuInflater().inflate(R.menu.activity_login, menu);
+		getMenuInflater().inflate(R.menu.activity_search, menu);
 		return true;
 	}
 
-	public void login(View button) {
-		EditText userEmailField = (EditText) findViewById(R.id.userEmail);
-		mUserEmail = userEmailField.getText().toString();
-		EditText userPasswordField = (EditText) findViewById(R.id.userPassword);
-		mUserPassword = userPasswordField.getText().toString();
-
-		if (mUserEmail.length() == 0 || mUserPassword.length() == 0) {
-			// input fields are empty
-			Toast.makeText(this, "Please complete all the fields",
-					Toast.LENGTH_LONG).show();
-			return;
-		} else {
-			LoginTask loginTask = new LoginTask(LoginActivity.this);
-			loginTask.setMessageLoading("Logging in...");
-			loginTask.execute(LOGIN_API_ENDPOINT_URL);
-		}
+	public void search(View button) {
+		EditText searchField = (EditText) findViewById(R.id.search_edittext);
+		mSearchQuery = searchField.getText().toString();
+		searchBarsFromAPI(SEARCH_URL);
 	}
 
-	private class LoginTask extends UrlJsonAsyncTask {
-		public LoginTask(Context context) {
+	private void searchBarsFromAPI(String url) {
+		SearchResultsTask searchResultsTask = new SearchResultsTask(
+				SearchActivity.this);
+		searchResultsTask.setMessageLoading("Seaching...");
+		searchResultsTask.execute(url + "?auth_token="
+				+ mPreferences.getString("AuthToken", ""));
+	}
+
+	private class SearchResultsTask extends UrlJsonAsyncTask {
+		public SearchResultsTask(Context context) {
 			super(context);
 		}
 
@@ -76,8 +94,7 @@ public class LoginActivity extends Activity {
 		protected JSONObject doInBackground(String... urls) {
 			DefaultHttpClient client = new DefaultHttpClient();
 			HttpPost post = new HttpPost(urls[0]);
-			JSONObject holder = new JSONObject();
-			JSONObject userObj = new JSONObject();
+			JSONObject searchQuery = new JSONObject();
 			String response = null;
 			JSONObject json = new JSONObject();
 
@@ -89,10 +106,8 @@ public class LoginActivity extends Activity {
 					json.put("info", "Something went wrong. Retry!");
 					// add the user email and password to
 					// the params
-					userObj.put("email", mUserEmail);
-					userObj.put("password", mUserPassword);
-					holder.put("user", userObj);
-					StringEntity se = new StringEntity(holder.toString());
+					searchQuery.put("search", mSearchQuery);
+					StringEntity se = new StringEntity(searchQuery.toString());
 					post.setEntity(se);
 
 					// setup the request headers
@@ -124,30 +139,31 @@ public class LoginActivity extends Activity {
 		protected void onPostExecute(JSONObject json) {
 			try {
 				if (json.getBoolean("success")) {
-					// everything is ok
-					SharedPreferences.Editor editor = mPreferences.edit();
-					// save the returned auth_token into
-					// the SharedPreferences
-					editor.putString("AuthToken", json.getJSONObject("data")
-							.getString("auth_token"));
-					editor.commit();
+					JSONArray jsonBars = json.getJSONObject("data")
+							.getJSONArray("bars");
+					Bundle b = new Bundle();
+					b.putString("bars", jsonBars.toString());
+					int length = jsonBars.length();
+					List<String> barTitles = new ArrayList<String>(length);
 
-					Intent intent;
-					if (json.getBoolean("admin")) {
-						intent = new Intent(getApplicationContext(),
-								AdminActivity.class);
-					} else if (json.getBoolean("partner")) {
-						intent = new Intent(getApplicationContext(),
-								PartnerActivity.class);
-					} else {
-						intent = new Intent(getApplicationContext(),
-								HomeActivity.class);
+					for (int i = 0; i < length; i++) {
+						barTitles.add(jsonBars.getJSONObject(i).getString(
+								"name"));
 					}
-					startActivityForResult(intent, 0);
-					finish();
+
+					ListView barListView = (ListView) findViewById(R.id.search_results_list_view);
+					if (barListView != null) {
+						barListView
+								.setAdapter(new ArrayAdapter<String>(
+										SearchActivity.this,
+										android.R.layout.simple_list_item_1,
+										barTitles));
+						barListView
+								.setOnItemClickListener(new JSONObjectClickedListener(
+										jsonBars, SearchActivity.this,
+										BarActivity.class));
+					}
 				}
-				Toast.makeText(context, json.getString("info"),
-						Toast.LENGTH_LONG).show();
 			} catch (Exception e) {
 				// something went wrong: show a Toast
 				// with the exception message
@@ -158,5 +174,4 @@ public class LoginActivity extends Activity {
 			}
 		}
 	}
-
 }

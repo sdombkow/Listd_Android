@@ -12,15 +12,10 @@
     <application
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/AppTheme" >
+        android:theme="@android:style/Theme.Black" >
         <activity
-            android:name=".HomeActivity"
-            android:label="@string/title_activity_home" >
-        </activity>
-        <activity
-            android:name="com.listdnow.www.authentication.WelcomeActivity"
-            android:label="@string/title_activity_welcome"
-            android:noHistory="true" >
+            android:name=".authentication.WelcomeActivity"
+            android:label="@string/title_activity_welcome" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -28,19 +23,34 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.listdnow.www.authentication.LoginActivity"
+            android:name=".authentication.LoginActivity"
             android:label="@string/title_activity_login"
             android:noHistory="true" >
         </activity>
         <activity
-            android:name="com.listdnow.www.BarActivity"
-            android:label="@string/title_activity_bar"
+            android:name=".authentication.RegisterActivity"
+            android:label="@string/title_activity_register"
             android:noHistory="true" >
         </activity>
         <activity
-            android:name="com.listdnow.www.authentication.RegisterActivity"
-            android:label="@string/title_activity_register"
-            android:noHistory="true" >
+            android:name="com.listdnow.www.HomeActivity"
+            android:label="@string/title_activity_home" >
+        </activity>
+        <activity
+            android:name="com.listdnow.www.BarActivity"
+            android:label="@string/title_activity_bar" >
+        </activity>
+        <activity
+            android:name="com.listdnow.www.SearchActivity"
+            android:label="@string/title_activity_search" >
+        </activity>
+        <activity
+            android:name=".AdminActivity"
+            android:label="@string/title_activity_admin" >
+        </activity>
+        <activity
+            android:name=".PartnerActivity"
+            android:label="@string/title_activity_partner" >
         </activity>
     </application>
 
