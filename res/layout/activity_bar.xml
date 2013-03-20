@@ -6,9 +6,38 @@
 
     <TextView
         android:id="@+id/barTitleTextView"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="unknown"
+        android:layout_gravity="top"
+        android:gravity="center"
+        android:text="Bar Name Placeholder"
         android:textAppearance="?android:attr/textAppearanceLarge" />
+
+    <HorizontalScrollView
+        android:id="@+id/horizontalScrollView1"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal" >
+
+            <TextView
+                android:id="@+id/textView1"
+                android:layout_width="318dp"
+                android:layout_height="wrap_content"
+                android:text="Placeholder for Bar Information"
+                android:textAppearance="?android:attr/textAppearanceLarge" />
+
+            <ListView
+                android:id="@+id/pass_set_listView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1" >
+            </ListView>
+
+        </LinearLayout>
+    </HorizontalScrollView>
 
 </LinearLayout>

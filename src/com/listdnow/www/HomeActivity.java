@@ -38,18 +38,6 @@ public class HomeActivity extends Activity {
 	}
 
 	@Override
-	public void onResume() {
-		super.onResume();
-
-		if (mPreferences.contains("AuthToken")) {
-			loadTasksFromAPI(TASKS_URL);
-		} else {
-			Intent intent = new Intent(HomeActivity.this, WelcomeActivity.class);
-			startActivityForResult(intent, 0);
-		}
-	}
-
-	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		getMenuInflater().inflate(R.menu.activity_home, menu);
 		return true;
@@ -64,61 +52,4 @@ public class HomeActivity extends Activity {
 		intent.putExtra("search_query",mSearchQuery);
 		startActivity(intent);
 	}
-	
-	
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		// Handle item selection
-		switch (item.getItemId()) {
-		case R.id.menu_refresh:
-			loadTasksFromAPI(TASKS_URL);
-			return true;
-		default:
-			return super.onOptionsItemSelected(item);
-		}
-	}
-
-	private void loadTasksFromAPI(String url) {
-		GetTasksTask getTasksTask = new GetTasksTask(HomeActivity.this);
-		getTasksTask.setMessageLoading("Loading tasks...");
-		getTasksTask.execute(url + "?auth_token="
-				+ mPreferences.getString("AuthToken", ""));
-	}
-
-	private class GetTasksTask extends UrlJsonAsyncTask {
-		public GetTasksTask(Context context) {
-			super(context);
-		}
-
-		@Override
-		protected void onPostExecute(JSONObject json) {
-			try {
-				JSONArray jsonBars = json.getJSONObject("data").getJSONArray(
-						"bars");
-				Bundle b = new Bundle();
-				b.putString("bars", jsonBars.toString());
-				int length = jsonBars.length();
-				List<String> barTitles = new ArrayList<String>(length);
-
-				for (int i = 0; i < length; i++) {
-					barTitles.add(jsonBars.getJSONObject(i).getString(
-							"name"));
-				}
-
-				ListView barListView = (ListView) findViewById(R.id.tasks_list_view);
-				if (barListView != null) {
-					barListView.setAdapter(new ArrayAdapter<String>(
-							HomeActivity.this,
-							android.R.layout.simple_list_item_1, barTitles));
-					barListView.setOnItemClickListener(new JSONObjectClickedListener(jsonBars,HomeActivity.this,BarActivity.class));
-				}
-			} catch (Exception e) {
-				Toast.makeText(context, e.getMessage(), Toast.LENGTH_LONG)
-						.show();
-			} finally {
-				super.onPostExecute(json);
-			}
-		}
-	}
-
 }

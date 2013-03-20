@@ -45,12 +45,16 @@
             android:label="@string/title_activity_search" >
         </activity>
         <activity
-            android:name=".AdminActivity"
+            android:name="com.listdnow.www.AdminActivity"
             android:label="@string/title_activity_admin" >
         </activity>
         <activity
-            android:name=".PartnerActivity"
+            android:name="com.listdnow.www.PartnerActivity"
             android:label="@string/title_activity_partner" >
+        </activity>
+        <activity
+            android:name="com.listdnow.www.PassSetActivity"
+            android:label="@string/title_activity_pass_set" >
         </activity>
     </application>
 

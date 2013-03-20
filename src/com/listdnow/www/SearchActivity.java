@@ -161,7 +161,7 @@ public class SearchActivity extends Activity {
 						barListView
 								.setOnItemClickListener(new JSONObjectClickedListener(
 										jsonBars, SearchActivity.this,
-										BarActivity.class));
+										BarActivity.class,"JSONObject"));
 					}
 				}
 			} catch (Exception e) {

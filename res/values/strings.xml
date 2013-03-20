@@ -24,5 +24,7 @@
     <string name="title_activity_admin">AdminActivity</string>
     <string name="title_activity_partner">PartnerActivity</string>
     <string name="hello_admin">Hello Admin!</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="title_activity_pass_set">PassSetActivity</string>
 
 </resources>
