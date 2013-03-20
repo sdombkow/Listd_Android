@@ -41,6 +41,13 @@
             android:layout_weight="1"
             android:onClick="login"
             android:text="@string/login" />
+        <com.facebook.widget.LoginButton
+	        android:id="@+id/authButton"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:layout_gravity="center_horizontal"
+	        android:layout_marginTop="30dp"
+        />
     </LinearLayout>
 
 </ScrollView>
