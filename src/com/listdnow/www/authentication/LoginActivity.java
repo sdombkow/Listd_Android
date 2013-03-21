@@ -11,11 +11,11 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
@@ -28,16 +28,30 @@ import com.listdnow.www.PartnerActivity;
 import com.listdnow.www.R;
 import com.savagelook.android.UrlJsonAsyncTask;
 
-public class LoginActivity extends Activity {
+public class LoginActivity extends FragmentActivity {
 
 	private final static String LOGIN_API_ENDPOINT_URL = "http://10.0.2.2:3000/api/v1/sessions.json";
 	private SharedPreferences mPreferences;
 	private String mUserEmail;
 	private String mUserPassword;
+	private MainFragment mainFragment;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		if (savedInstanceState == null) {
+	        // Add the fragment on initial activity setup
+	        mainFragment = new MainFragment();
+	        getSupportFragmentManager()
+	        .beginTransaction()
+	        .add(android.R.id.content, mainFragment)
+	        .commit();
+	    } else {
+	        // Or set the fragment from restored state info
+	        mainFragment = (MainFragment) getSupportFragmentManager()
+	        .findFragmentById(android.R.id.content);
+	    }
+		
 		setContentView(R.layout.activity_login);
 
 		mPreferences = getSharedPreferences("CurrentUser", MODE_PRIVATE);
@@ -67,6 +81,7 @@ public class LoginActivity extends Activity {
 		}
 	}
 
+	
 	private class LoginTask extends UrlJsonAsyncTask {
 		public LoginTask(Context context) {
 			super(context);
