@@ -2,7 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:gravity="top" >
+    android:gravity="bottom" >
 
     <TextView
         android:id="@+id/passSetTitleTextView"
@@ -14,26 +14,52 @@
         android:text="PassSet Date Place Holder"
         tools:context=".PassSetActivity" />
 
-    <Button
-        android:id="@+id/purchase_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_marginTop="128dp"
-        android:onClick="purchase"
-        android:text="Purchase Ticket" />
-
-    <EditText
-        android:id="@+id/editText1"
+    <TextView
+        android:id="@+id/purchaseNameOfTickets_TextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_below="@+id/passSetTitleTextView"
-        android:layout_marginTop="71dp"
-        android:ems="10"
-        android:inputType="textPersonName" >
+        android:layout_marginTop="34dp"
+        android:text="Name on Ticket"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
 
-        <requestFocus />
-    </EditText>
+    <EditText
+        android:id="@+id/purchaseNameOfTickets_EditText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/purchaseNameOfTickets_TextView"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:text="Steve" />
+
+    <TextView
+        android:id="@+id/purchaseNumberOfTickets_TextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_centerVertical="true"
+        android:text="Number of Tickets"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
+
+    <EditText
+        android:id="@+id/purchaseNumberOfTickets_EditText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/purchaseNumberOfTickets_TextView"
+        android:ems="10"
+        android:inputType="number"
+        android:text="1" />
+
+    <Button
+        android:id="@+id/continue_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:onClick="continueButtonClicked"
+        android:text="Continue" />
 
 </RelativeLayout>

@@ -1,0 +1,72 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <TextView
+        android:id="@+id/purchaseCost_textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:text="Placeholder For Total Cost"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
+
+    <EditText
+        android:id="@+id/purchaseCreditCardNumber_editText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/purchaseCost_textView"
+        android:layout_marginTop="16dp"
+        android:ems="10"
+        android:hint="Credit Card Number"
+        android:inputType="number"
+        android:text="4242424242424242" />
+
+    <EditText
+        android:id="@+id/purchaseCVV_editText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/purchaseCreditCardNumber_editText"
+        android:ems="10"
+        android:hint="CVV"
+        android:inputType="number"
+        android:text="123" >
+
+        <requestFocus />
+    </EditText>
+
+    <EditText
+        android:id="@+id/purchaseMonth_editText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/purchaseCVV_editText"
+        android:ems="10"
+        android:hint="Month"
+        android:inputType="number"
+        android:text="12" />
+
+    <EditText
+        android:id="@+id/purchaseYear_editText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/purchaseMonth_editText"
+        android:ems="10"
+        android:hint="Year"
+        android:inputType="number"
+        android:text="2015" />
+
+    <Button
+        android:id="@+id/purchase_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:text="Purchase"
+        android:onClick="purchaseButtonClicked" />
+
+</RelativeLayout>

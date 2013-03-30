@@ -56,6 +56,10 @@
             android:name="com.listdnow.www.PassSetActivity"
             android:label="@string/title_activity_pass_set" >
         </activity>
+        <activity
+            android:name=".PurchaseActivity"
+            android:label="@string/title_activity_purchase" >
+        </activity>
     </application>
 
 </manifest>

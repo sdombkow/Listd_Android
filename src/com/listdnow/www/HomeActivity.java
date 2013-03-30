@@ -35,6 +35,17 @@ public class HomeActivity extends Activity {
 		setContentView(R.layout.activity_home);
 
 		mPreferences = getSharedPreferences("CurrentUser", MODE_PRIVATE);
+
+		List<String> taskOptions = new ArrayList<String>();
+		taskOptions.add("Bars Nearby");
+		taskOptions.add("My Passes");
+		taskOptions.add("Billing Information");
+		taskOptions.add("Account Information");
+		ListView taskListView = (ListView) findViewById(R.id.tasks_list_view);
+		if (taskListView != null) {
+			taskListView.setAdapter(new ArrayAdapter<String>(HomeActivity.this,
+					android.R.layout.simple_list_item_1, taskOptions));
+		}
 	}
 
 	@Override
@@ -46,10 +57,9 @@ public class HomeActivity extends Activity {
 	public void search(View button) {
 		EditText searchField = (EditText) findViewById(R.id.search_edittext);
 		mSearchQuery = searchField.getText().toString();
-		
 		Intent intent = new Intent(getApplicationContext(),
 				SearchActivity.class);
-		intent.putExtra("search_query",mSearchQuery);
+		intent.putExtra("search_query", mSearchQuery);
 		startActivity(intent);
 	}
 }
