@@ -7,6 +7,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import android.app.Activity;
+import android.content.ClipData.Item;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -21,6 +22,7 @@ import android.widget.Toast;
 
 import com.listdnow.www.authentication.WelcomeActivity;
 import com.listdnow.www.util.JSONObjectClickedListener;
+import com.listdnow.www.util.ListViewObjectClickedListener;
 import com.savagelook.android.UrlJsonAsyncTask;
 
 public class HomeActivity extends Activity {
@@ -45,6 +47,9 @@ public class HomeActivity extends Activity {
 		if (taskListView != null) {
 			taskListView.setAdapter(new ArrayAdapter<String>(HomeActivity.this,
 					android.R.layout.simple_list_item_1, taskOptions));
+			taskListView
+					.setOnItemClickListener(new ListViewObjectClickedListener(
+							HomeActivity.this, taskOptions));
 		}
 	}
 

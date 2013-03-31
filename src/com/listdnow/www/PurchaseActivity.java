@@ -1,22 +1,37 @@
 package com.listdnow.www;
 
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
+import org.apache.http.client.HttpResponseException;
+import org.apache.http.client.ResponseHandler;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.BasicResponseHandler;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.listdnow.www.util.JSONObjectClickedListener;
 import com.savagelook.android.UrlJsonAsyncTask;
 import com.stripe.Stripe;
 import com.stripe.exception.StripeException;
@@ -24,7 +39,8 @@ import com.stripe.model.Charge;
 
 public class PurchaseActivity extends Activity {
 
-	private static final String PURCHASE_URL = "http://10.0.2.2:3000/api/v1/search.json";
+	private static final String PASS_SET_URL = "http://10.0.2.2:3000/api/v1/passset.json";
+	private static final String PURCHASE_URL = "http://10.0.2.2:3000/api/v1/purchase.json";
 	private SharedPreferences mPreferences;
 	private JSONObject myPassSet;
 	private String purchaseNameOfTickets;
@@ -34,10 +50,12 @@ public class PurchaseActivity extends Activity {
 	private int purchaseMonth;
 	private int purchaseYear;
 	private int purchaseCost;
+	private boolean limitedTickets = false;
 	static Map<String, Object> CardParams = new HashMap<String, Object>();
 	static Map<String, Object> ChargeParams = new HashMap<String, Object>();
-	String errorMessage = null;
+	String stripeErrorMessage = null;
 	private ProgressDialog myDialog;
+	private String chargeToken = null;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -87,7 +105,7 @@ public class PurchaseActivity extends Activity {
 		Stripe.apiKey = "tGN0bIwXnHdwOa85VABjPdSn8nWY7G7I";
 		ProcessStripe processStripe = new ProcessStripe(PurchaseActivity.this);
 		processStripe.setMessageLoading("Processing Order");
-		processStripe.execute(PURCHASE_URL + "?auth_token="
+		processStripe.execute(PASS_SET_URL + "?auth_token="
 				+ mPreferences.getString("AuthToken", ""));
 	}
 
@@ -108,28 +126,151 @@ public class PurchaseActivity extends Activity {
 
 		@Override
 		protected JSONObject doInBackground(String... urls) {
-			// TODO Auto-generated method stub
-			Charge charge;
+			DefaultHttpClient client = new DefaultHttpClient();
+			HttpPost post = new HttpPost(urls[0]);
+			JSONObject purchaseParams = new JSONObject();
+			String response = null;
+			JSONObject json = new JSONObject();
+
 			try {
-				charge = Charge.create(ChargeParams);
-				System.out.println(charge);
-			} catch (StripeException e) {
-				errorMessage = e.getMessage();
+				try {
+					// setup the returned values in case
+					// something goes wrong
+					json.put("success", false);
+					json.put("info", "Something went wrong. Retry!");
+					// add the user email and password to
+					// the params
+					purchaseParams.put("id", myPassSet.get("id"));
+					StringEntity se = new StringEntity(
+							purchaseParams.toString());
+					post.setEntity(se);
+
+					// setup the request headers
+					post.setHeader("Accept", "application/json");
+					post.setHeader("Content-Type", "application/json");
+
+					ResponseHandler<String> responseHandler = new BasicResponseHandler();
+					response = client.execute(post, responseHandler);
+					json = new JSONObject(response);
+
+				} catch (HttpResponseException e) {
+					e.printStackTrace();
+					Log.e("ClientProtocol", "" + e);
+					json.put("info",
+							"Email and/or password are invalid. Retry!");
+				} catch (IOException e) {
+					e.printStackTrace();
+					Log.e("IO", "" + e);
+				}
+			} catch (JSONException e) {
+				e.printStackTrace();
+				Log.e("JSON", "" + e);
 			}
-			if (!errorMessage.equals(null)) {
-				int a = 0;
-				return null;
-			} else {
-				int b = 0;
-				return null;
+
+			try {
+				myPassSet = json.getJSONObject("data").getJSONObject("PassSet");
+				if (purchaseNumberOfTickets > myPassSet.getInt("unsold_passes")) {
+					limitedTickets = true;
+				} else {
+					limitedTickets = false;
+					stripeErrorMessage = null;
+					Charge charge;
+					try {
+						charge = Charge.create(ChargeParams);
+						chargeToken = charge.getId();
+						System.out.println(charge);
+					} catch (StripeException e) {
+						stripeErrorMessage = e.getMessage();
+					}
+					if (stripeErrorMessage != null) {
+						json = null;
+					} else {
+						client = new DefaultHttpClient();
+						post = new HttpPost(PURCHASE_URL + "?auth_token="
+								+ mPreferences.getString("AuthToken", ""));
+						purchaseParams = new JSONObject();
+						response = null;
+						json = new JSONObject();
+						try {
+							try {
+								// setup the returned values in case
+								// something goes wrong
+								json.put("success", false);
+								json.put("info", "Something went wrong. Retry!");
+								// add the user email and password to
+								// the params
+								purchaseParams.put("id", myPassSet.get("id"));
+								purchaseParams.put("bar_id",
+										myPassSet.get("bar_id"));
+								purchaseParams.put("num_passes",
+										purchaseNumberOfTickets);
+								purchaseParams.put("purchaseCost",
+										purchaseCost);
+								purchaseParams.put("purchaseName",
+										purchaseNameOfTickets);
+								purchaseParams.put("chargeToken", chargeToken);
+
+								StringEntity se = new StringEntity(
+										purchaseParams.toString());
+								post.setEntity(se);
+
+								// setup the request headers
+								post.setHeader("Accept", "application/json");
+								post.setHeader("Content-Type",
+										"application/json");
+
+								ResponseHandler<String> responseHandler = new BasicResponseHandler();
+								response = client
+										.execute(post, responseHandler);
+								json = new JSONObject(response);
+
+							} catch (HttpResponseException e) {
+								e.printStackTrace();
+								Log.e("ClientProtocol", "" + e);
+								json.put("info",
+										"Email and/or password are invalid. Retry!");
+							} catch (IOException e) {
+								e.printStackTrace();
+								Log.e("IO", "" + e);
+							}
+						} catch (JSONException e) {
+							e.printStackTrace();
+							Log.e("JSON", "" + e);
+						}
+					}
+				}
+			} catch (JSONException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
+			return json;
 		}
 
 		protected void onPostExecute(JSONObject json) {
-			if (!errorMessage.equals(null)) {
-				Toast.makeText(context, errorMessage, Toast.LENGTH_LONG).show();
+			if (limitedTickets) {
+				Toast.makeText(context, "Not Enough Tickets Available",
+						Toast.LENGTH_LONG).show();
+				finish();
+				super.onPostExecute(json);
+			} else if (stripeErrorMessage != null) {
+				Toast.makeText(context, stripeErrorMessage, Toast.LENGTH_LONG)
+						.show();
+				super.onPostExecute(json);
+			} else {
+				try {
+					Intent intent = new Intent(getApplicationContext(),
+							PassActivity.class);
+					intent.putExtra("jsonobject", json.toString());
+					startActivity(intent);
+					finish();
+				} catch (Exception e) {
+					Toast.makeText(context, e.getMessage(), Toast.LENGTH_LONG)
+							.show();
+				} finally {
+					super.onPostExecute(json);
+				}
 			}
-			super.onPostExecute(json);
+
 		}
 	}
 

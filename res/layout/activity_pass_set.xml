@@ -32,7 +32,7 @@
         android:layout_below="@+id/purchaseNameOfTickets_TextView"
         android:ems="10"
         android:inputType="textPersonName"
-        android:text="Steve" />
+        android:text="Steven Chen" />
 
     <TextView
         android:id="@+id/purchaseNumberOfTickets_TextView"

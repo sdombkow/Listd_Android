@@ -46,7 +46,7 @@ public class BarActivity extends Activity {
 				barListView
 						.setOnItemClickListener(new JSONObjectClickedListener(
 								jsonPassSets, BarActivity.this,
-								PassSetActivity.class, "JSONObject"));
+								PassSetActivity.class));
 			}
 
 		} catch (JSONException e) {

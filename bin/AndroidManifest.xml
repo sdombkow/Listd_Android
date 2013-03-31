@@ -60,6 +60,14 @@
             android:name=".PurchaseActivity"
             android:label="@string/title_activity_purchase" >
         </activity>
+        <activity
+            android:name=".PassActivity"
+            android:label="@string/title_activity_pass" >
+        </activity>
+        <activity
+            android:name=".PassesActivity"
+            android:label="@string/title_activity_passes" >
+        </activity>
     </application>
 
 </manifest>

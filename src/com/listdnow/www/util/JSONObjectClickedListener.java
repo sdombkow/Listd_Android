@@ -17,21 +17,20 @@ public class JSONObjectClickedListener implements OnItemClickListener {
 	private JSONArray myObjects;
 	private Activity myActivity;
 	private Class<?> myNextActivity;
-	private String myType;
 
 	public JSONObjectClickedListener(JSONArray objects, Activity activity,
-			Class<?> nextActivity, String Type) {
+			Class<?> nextActivity) {
 		myObjects = objects;
 		myActivity = activity;
 		myNextActivity = nextActivity;
-		myType = Type;
+
 	}
 
 	public void onItemClick(AdapterView<?> parent, View view, int position,
 			long id) {
-		if (myType.equals("JSONObject")) {
-			ClickJSONObject(position);
-		}
+
+		ClickJSONObject(position);
+
 	}
 
 	public void ClickJSONObject(int position) {

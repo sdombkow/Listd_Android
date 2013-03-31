@@ -27,5 +27,7 @@
     <string name="hello_world">Hello world!</string>
     <string name="title_activity_pass_set">PassSetActivity</string>
     <string name="title_activity_purchase">PurchaseActivity</string>
+    <string name="title_activity_pass">PassActivity</string>
+    <string name="title_activity_passes">PassesActivity</string>
 
 </resources>
