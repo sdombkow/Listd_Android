@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
 
     <string name="app_name">Listd</string>
@@ -29,5 +30,8 @@
     <string name="title_activity_purchase">PurchaseActivity</string>
     <string name="title_activity_pass">PassActivity</string>
     <string name="title_activity_passes">PassesActivity</string>
+    <string name="title_activity_search_map">SearchMapActivity</string>
+    <string name="action_settings">Settings</string>
+    <string name="title_activity_search_nearby">SearchNearby</string>
 
 </resources>

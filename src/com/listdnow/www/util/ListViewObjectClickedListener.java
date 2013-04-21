@@ -10,6 +10,7 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 
 import com.listdnow.www.PassesActivity;
+import com.listdnow.www.SearchActivity;
 
 public class ListViewObjectClickedListener implements OnItemClickListener {
 
@@ -28,6 +29,10 @@ public class ListViewObjectClickedListener implements OnItemClickListener {
 		// TODO Auto-generated method stub
 		myType = myList.get(position);
 		if (myType.equals("Bars Nearby")) {
+			Activity a = myActivity;
+			Intent i = new Intent(a, SearchActivity.class);
+			i.putExtra("searchNearby", true);
+			a.startActivityForResult(i, 0);
 		}
 		if (myType.equals("My Passes")) {
 			Activity a = myActivity;

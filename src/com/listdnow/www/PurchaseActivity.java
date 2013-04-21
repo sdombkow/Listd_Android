@@ -102,7 +102,7 @@ public class PurchaseActivity extends Activity {
 		purchaseYear = Integer.parseInt(purchaseYear_editText.getText()
 				.toString());
 		initializeCardParams();
-		Stripe.apiKey = "tGN0bIwXnHdwOa85VABjPdSn8nWY7G7I";
+		Stripe.apiKey = "sk_test_6HFfiDn24fHy0wzjETZZ1uIc";
 		ProcessStripe processStripe = new ProcessStripe(PurchaseActivity.this);
 		processStripe.setMessageLoading("Processing Order");
 		processStripe.execute(PASS_SET_URL + "?auth_token="

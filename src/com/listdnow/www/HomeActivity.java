@@ -1,29 +1,27 @@
 package com.listdnow.www;
 
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
-
 import android.app.Activity;
-import android.content.ClipData.Item;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.content.pm.PackageManager.NameNotFoundException;
+import android.content.pm.Signature;
 import android.os.Bundle;
+import android.util.Base64;
+import android.util.Log;
 import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.Toast;
 
-import com.listdnow.www.authentication.WelcomeActivity;
-import com.listdnow.www.util.JSONObjectClickedListener;
 import com.listdnow.www.util.ListViewObjectClickedListener;
-import com.savagelook.android.UrlJsonAsyncTask;
 
 public class HomeActivity extends Activity {
 
@@ -65,6 +63,7 @@ public class HomeActivity extends Activity {
 		Intent intent = new Intent(getApplicationContext(),
 				SearchActivity.class);
 		intent.putExtra("search_query", mSearchQuery);
+		intent.putExtra("searchNearby", false);
 		startActivity(intent);
 	}
 }

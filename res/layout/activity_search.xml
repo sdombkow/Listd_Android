@@ -10,11 +10,17 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true" >
 
+        <Button
+            android:id="@+id/map_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="map"
+            android:text="Map" />
+
         <EditText
             android:id="@+id/search_edittext"
-            android:layout_width="0dip"
+            android:layout_width="196dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1.17"
             android:ems="10"
             android:hint="@string/search_hint" >
 
@@ -23,10 +29,11 @@
 
         <Button
             android:id="@+id/search_button"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/search_button"
-            android:onClick="search" />
+            android:onClick="search"
+            android:text="@string/search_button" />
+
     </LinearLayout>
 
     <LinearLayout
